@@ -9,38 +9,103 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NouvelleCommandeRouteImport } from './routes/nouvelle-commande'
+import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CommandesIndexRouteImport } from './routes/commandes.index'
+import { Route as CommandesIdRouteImport } from './routes/commandes.$id'
 
+const NouvelleCommandeRoute = NouvelleCommandeRouteImport.update({
+  id: '/nouvelle-commande',
+  path: '/nouvelle-commande',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesRoute = ArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommandesIndexRoute = CommandesIndexRouteImport.update({
+  id: '/commandes/',
+  path: '/commandes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommandesIdRoute = CommandesIdRouteImport.update({
+  id: '/commandes/$id',
+  path: '/commandes/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesRoute
+  '/nouvelle-commande': typeof NouvelleCommandeRoute
+  '/commandes/$id': typeof CommandesIdRoute
+  '/commandes/': typeof CommandesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesRoute
+  '/nouvelle-commande': typeof NouvelleCommandeRoute
+  '/commandes/$id': typeof CommandesIdRoute
+  '/commandes': typeof CommandesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesRoute
+  '/nouvelle-commande': typeof NouvelleCommandeRoute
+  '/commandes/$id': typeof CommandesIdRoute
+  '/commandes/': typeof CommandesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/articles'
+    | '/nouvelle-commande'
+    | '/commandes/$id'
+    | '/commandes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/articles' | '/nouvelle-commande' | '/commandes/$id' | '/commandes'
+  id:
+    | '__root__'
+    | '/'
+    | '/articles'
+    | '/nouvelle-commande'
+    | '/commandes/$id'
+    | '/commandes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArticlesRoute: typeof ArticlesRoute
+  NouvelleCommandeRoute: typeof NouvelleCommandeRoute
+  CommandesIdRoute: typeof CommandesIdRoute
+  CommandesIndexRoute: typeof CommandesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/nouvelle-commande': {
+      id: '/nouvelle-commande'
+      path: '/nouvelle-commande'
+      fullPath: '/nouvelle-commande'
+      preLoaderRoute: typeof NouvelleCommandeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +113,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/commandes/': {
+      id: '/commandes/'
+      path: '/commandes'
+      fullPath: '/commandes/'
+      preLoaderRoute: typeof CommandesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commandes/$id': {
+      id: '/commandes/$id'
+      path: '/commandes/$id'
+      fullPath: '/commandes/$id'
+      preLoaderRoute: typeof CommandesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArticlesRoute: ArticlesRoute,
+  NouvelleCommandeRoute: NouvelleCommandeRoute,
+  CommandesIdRoute: CommandesIdRoute,
+  CommandesIndexRoute: CommandesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

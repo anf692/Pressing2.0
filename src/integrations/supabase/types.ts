@@ -14,16 +14,153 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      articles: {
+        Row: {
+          actif: boolean
+          created_at: string
+          id: string
+          nom: string
+          prix: number
+          type_prix: Database["public"]["Enums"]["type_prix_enum"]
+        }
+        Insert: {
+          actif?: boolean
+          created_at?: string
+          id?: string
+          nom: string
+          prix: number
+          type_prix: Database["public"]["Enums"]["type_prix_enum"]
+        }
+        Update: {
+          actif?: boolean
+          created_at?: string
+          id?: string
+          nom?: string
+          prix?: number
+          type_prix?: Database["public"]["Enums"]["type_prix_enum"]
+        }
+        Relationships: []
+      }
+      clients: {
+        Row: {
+          created_at: string
+          id: string
+          nom: string
+          whatsapp: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nom: string
+          whatsapp: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nom?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      commandes: {
+        Row: {
+          client_id: string
+          created_at: string
+          date_depot: string
+          date_recuperation_estimee: string | null
+          date_recuperation_reelle: string | null
+          id: string
+          numero_ticket: string
+          statut: Database["public"]["Enums"]["statut_commande_enum"]
+          total_fcfa: number
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          date_depot?: string
+          date_recuperation_estimee?: string | null
+          date_recuperation_reelle?: string | null
+          id?: string
+          numero_ticket?: string
+          statut?: Database["public"]["Enums"]["statut_commande_enum"]
+          total_fcfa?: number
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          date_depot?: string
+          date_recuperation_estimee?: string | null
+          date_recuperation_reelle?: string | null
+          id?: string
+          numero_ticket?: string
+          statut?: Database["public"]["Enums"]["statut_commande_enum"]
+          total_fcfa?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commandes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lignes_commande: {
+        Row: {
+          article_id: string
+          commande_id: string
+          created_at: string
+          id: string
+          poids_kg: number | null
+          quantite: number | null
+          sous_total: number
+        }
+        Insert: {
+          article_id: string
+          commande_id: string
+          created_at?: string
+          id?: string
+          poids_kg?: number | null
+          quantite?: number | null
+          sous_total: number
+        }
+        Update: {
+          article_id?: string
+          commande_id?: string
+          created_at?: string
+          id?: string
+          poids_kg?: number | null
+          quantite?: number | null
+          sous_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lignes_commande_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lignes_commande_commande_id_fkey"
+            columns: ["commande_id"]
+            isOneToOne: false
+            referencedRelation: "commandes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generer_numero_ticket: { Args: never; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      statut_commande_enum: "en_attente" | "en_cours" | "pret" | "recupere"
+      type_prix_enum: "kilo" | "fixe"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +287,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      statut_commande_enum: ["en_attente", "en_cours", "pret", "recupere"],
+      type_prix_enum: ["kilo", "fixe"],
+    },
   },
 } as const
