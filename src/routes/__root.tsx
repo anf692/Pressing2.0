@@ -79,10 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Application de gestion du Pressing by Ramou Diouf à Rufisque." },
       { name: "author", content: "Pressing by Ramou Diouf" },
       { property: "og:title", content: "Pressing by Ramou Diouf — Gestion" },
-      { property: "og:description", content: "Gestion des commandes, tickets et tarifs du pressing." },
+      { property: "og:description", content: "Application de gestion du Pressing by Ramou Diouf à Rufisque." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Pressing by Ramou Diouf — Gestion" },
+      { name: "twitter:description", content: "Application de gestion du Pressing by Ramou Diouf à Rufisque." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c7925739-74b8-4868-b1ca-a9b462d94d46" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c7925739-74b8-4868-b1ca-a9b462d94d46" },
     ],
     links: [
       {
