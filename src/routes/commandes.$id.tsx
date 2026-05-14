@@ -81,12 +81,11 @@ function PageDetail() {
   const changerStatut = async (
     nouveauStatut: "en_attente" | "en_cours" | "pret" | "recupere",
   ) => {
-    const maj: Record<string, unknown> = { statut: nouveauStatut };
-    if (nouveauStatut === "recupere") {
-      maj.date_recuperation_reelle = new Date().toISOString();
-    } else {
-      maj.date_recuperation_reelle = null;
-    }
+    const maj = {
+      statut: nouveauStatut,
+      date_recuperation_reelle:
+        nouveauStatut === "recupere" ? new Date().toISOString() : null,
+    };
     const { error } = await supabase.from("commandes").update(maj).eq("id", id);
     if (error) {
       toast.error("Erreur : " + error.message);
