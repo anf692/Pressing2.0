@@ -121,16 +121,16 @@ function PageDetail() {
     `${INFOS_PRESSING.contacts.join(" / ")}`;
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 p-6">
-      <div className="no-print flex items-center justify-between">
+    <div className="container mx-auto max-w-4xl space-y-4 p-4 sm:space-y-6 sm:p-6">
+      <div className="no-print flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link to="/commandes">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour aux commandes
           </Button>
         </Link>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => window.print()}>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => window.print()} className="flex-1 sm:flex-none">
             <Printer className="mr-2 h-4 w-4" />
             Imprimer
           </Button>
@@ -139,10 +139,11 @@ function PageDetail() {
               href={lienWhatsApp(data.clients.whatsapp, messageWA)}
               target="_blank"
               rel="noopener noreferrer"
+              className="flex-1 sm:flex-none"
             >
-              <Button>
+              <Button className="w-full">
                 <MessageCircle className="mr-2 h-4 w-4" />
-                Envoyer sur WhatsApp
+                WhatsApp
               </Button>
             </a>
           )}
@@ -153,12 +154,12 @@ function PageDetail() {
         <CardHeader>
           <CardTitle>Statut de la commande</CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center gap-4">
+        <CardContent className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
           <Badge className={couleurStatut(data.statut)} variant="secondary">
             {libelleStatut(data.statut)}
           </Badge>
           <Select value={data.statut} onValueChange={(v) => changerStatut(v as any)}>
-            <SelectTrigger className="w-60">
+            <SelectTrigger className="w-full sm:w-60">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -173,23 +174,23 @@ function PageDetail() {
 
       {/* Ticket imprimable */}
       <Card className="ticket-imprimable">
-        <CardContent className="space-y-6 p-8">
+        <CardContent className="space-y-4 p-4 sm:space-y-6 sm:p-8">
           <div className="border-b pb-4 text-center">
-            <h2 className="text-2xl font-bold text-primary">{INFOS_PRESSING.nom}</h2>
+            <h2 className="text-xl font-bold text-primary sm:text-2xl">{INFOS_PRESSING.nom}</h2>
             <p className="text-sm text-muted-foreground">{INFOS_PRESSING.localisation}</p>
             <p className="text-sm text-muted-foreground">
               {INFOS_PRESSING.contacts.join(" / ")}
             </p>
           </div>
 
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-xs uppercase text-muted-foreground">N° Ticket</p>
-              <p className="font-mono text-2xl font-bold text-primary">
+              <p className="font-mono text-xl font-bold text-primary sm:text-2xl">
                 #{data.numero_ticket}
               </p>
             </div>
-            <div className="text-right text-sm">
+            <div className="text-left text-xs sm:text-right sm:text-sm">
               <p>
                 <span className="text-muted-foreground">Dépôt : </span>
                 {formaterDateHeure(data.date_depot)}
@@ -217,7 +218,7 @@ function PageDetail() {
             </p>
           </div>
 
-          <Table>
+          <div className="overflow-x-auto"><Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Article</TableHead>
@@ -245,11 +246,11 @@ function PageDetail() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table></div>
 
           <div className="flex items-center justify-between border-t pt-4">
-            <span className="text-lg font-medium">Total</span>
-            <span className="text-3xl font-bold text-primary">
+            <span className="text-base font-medium sm:text-lg">Total</span>
+            <span className="text-2xl font-bold text-primary sm:text-3xl">
               {formaterFCFA(data.total_fcfa)}
             </span>
           </div>

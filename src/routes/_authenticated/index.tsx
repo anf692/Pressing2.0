@@ -125,10 +125,10 @@ function TableauDeBord() {
   }, [lignesTop]);
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="container mx-auto space-y-4 p-4 sm:space-y-6 sm:p-6">
       <div>
-        <h1 className="text-3xl font-bold text-primary">Tableau de bord</h1>
-        <p className="text-sm text-muted-foreground">Vue d'ensemble de l'activité du pressing</p>
+        <h1 className="text-2xl font-bold text-primary sm:text-3xl">Tableau de bord</h1>
+        <p className="text-xs text-muted-foreground sm:text-sm">Vue d'ensemble de l'activité du pressing</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -224,13 +224,13 @@ function CarteKpi({
 }) {
   return (
     <Card>
-      <CardContent className="flex items-center gap-4 p-6">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-          <Icone className="h-6 w-6" />
+      <CardContent className="flex items-center gap-3 p-4 sm:gap-4 sm:p-6">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground sm:h-12 sm:w-12">
+          <Icone className="h-5 w-5 sm:h-6 sm:w-6" />
         </div>
-        <div className="flex-1">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">{titre}</p>
-          <p className="text-2xl font-bold text-foreground">{valeur}</p>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">{titre}</p>
+          <p className="truncate text-xl font-bold text-foreground sm:text-2xl">{valeur}</p>
         </div>
       </CardContent>
     </Card>
