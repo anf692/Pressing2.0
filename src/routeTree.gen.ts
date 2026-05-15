@@ -10,19 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as CommandesIdRouteImport } from './routes/commandes.$id'
 import { Route as AuthenticatedNouvelleCommandeRouteImport } from './routes/_authenticated/nouvelle-commande'
 import { Route as AuthenticatedArticlesRouteImport } from './routes/_authenticated/articles'
 import { Route as AuthenticatedCommandesIndexRouteImport } from './routes/_authenticated/commandes.index'
+import { Route as AuthenticatedCommandesIdRouteImport } from './routes/_authenticated/commandes.$id'
 
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/_authenticated/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommandesIdRoute = CommandesIdRouteImport.update({
-  id: '/commandes/$id',
-  path: '/commandes/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedNouvelleCommandeRoute =
@@ -42,27 +37,33 @@ const AuthenticatedCommandesIndexRoute =
     path: '/commandes/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedCommandesIdRoute =
+  AuthenticatedCommandesIdRouteImport.update({
+    id: '/_authenticated/commandes/$id',
+    path: '/commandes/$id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/articles': typeof AuthenticatedArticlesRoute
   '/nouvelle-commande': typeof AuthenticatedNouvelleCommandeRoute
-  '/commandes/$id': typeof CommandesIdRoute
   '/': typeof AuthenticatedIndexRoute
+  '/commandes/$id': typeof AuthenticatedCommandesIdRoute
   '/commandes/': typeof AuthenticatedCommandesIndexRoute
 }
 export interface FileRoutesByTo {
   '/articles': typeof AuthenticatedArticlesRoute
   '/nouvelle-commande': typeof AuthenticatedNouvelleCommandeRoute
-  '/commandes/$id': typeof CommandesIdRoute
   '/': typeof AuthenticatedIndexRoute
+  '/commandes/$id': typeof AuthenticatedCommandesIdRoute
   '/commandes': typeof AuthenticatedCommandesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated/articles': typeof AuthenticatedArticlesRoute
   '/_authenticated/nouvelle-commande': typeof AuthenticatedNouvelleCommandeRoute
-  '/commandes/$id': typeof CommandesIdRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/commandes/$id': typeof AuthenticatedCommandesIdRoute
   '/_authenticated/commandes/': typeof AuthenticatedCommandesIndexRoute
 }
 export interface FileRouteTypes {
@@ -70,25 +71,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/articles'
     | '/nouvelle-commande'
-    | '/commandes/$id'
     | '/'
+    | '/commandes/$id'
     | '/commandes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/articles' | '/nouvelle-commande' | '/commandes/$id' | '/' | '/commandes'
+  to: '/articles' | '/nouvelle-commande' | '/' | '/commandes/$id' | '/commandes'
   id:
     | '__root__'
     | '/_authenticated/articles'
     | '/_authenticated/nouvelle-commande'
-    | '/commandes/$id'
     | '/_authenticated/'
+    | '/_authenticated/commandes/$id'
     | '/_authenticated/commandes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedArticlesRoute: typeof AuthenticatedArticlesRoute
   AuthenticatedNouvelleCommandeRoute: typeof AuthenticatedNouvelleCommandeRoute
-  CommandesIdRoute: typeof CommandesIdRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCommandesIdRoute: typeof AuthenticatedCommandesIdRoute
   AuthenticatedCommandesIndexRoute: typeof AuthenticatedCommandesIndexRoute
 }
 
@@ -99,13 +100,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/commandes/$id': {
-      id: '/commandes/$id'
-      path: '/commandes/$id'
-      fullPath: '/commandes/$id'
-      preLoaderRoute: typeof CommandesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/nouvelle-commande': {
@@ -129,14 +123,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommandesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/commandes/$id': {
+      id: '/_authenticated/commandes/$id'
+      path: '/commandes/$id'
+      fullPath: '/commandes/$id'
+      preLoaderRoute: typeof AuthenticatedCommandesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedArticlesRoute: AuthenticatedArticlesRoute,
   AuthenticatedNouvelleCommandeRoute: AuthenticatedNouvelleCommandeRoute,
-  CommandesIdRoute: CommandesIdRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCommandesIdRoute: AuthenticatedCommandesIdRoute,
   AuthenticatedCommandesIndexRoute: AuthenticatedCommandesIndexRoute,
 }
 export const routeTree = rootRouteImport

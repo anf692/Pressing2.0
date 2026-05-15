@@ -50,7 +50,7 @@ type Detail = {
   }[];
 };
 
-export const Route = createFileRoute("/commandes/$id")({
+export const Route = createFileRoute("/_authenticated/commandes/$id")({
   head: () => ({
     meta: [
       { title: "Détail commande — Pressing by Ramou Diouf" },
