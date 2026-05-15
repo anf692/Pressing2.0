@@ -43,7 +43,7 @@ type Article = {
   actif: boolean;
 };
 
-export const Route = createFileRoute("/articles")({
+export const Route = createFileRoute("/_authenticated/articles")({
   head: () => ({
     meta: [
       { title: "Articles & tarifs — Pressing by Ramou Diouf" },

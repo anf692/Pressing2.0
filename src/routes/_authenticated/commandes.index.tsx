@@ -39,7 +39,7 @@ type CommandeListe = {
   clients: { nom: string; whatsapp: string } | null;
 };
 
-export const Route = createFileRoute("/commandes/")({
+export const Route = createFileRoute("/_authenticated/commandes/")({
   head: () => ({
     meta: [
       { title: "Commandes — Pressing by Ramou Diouf" },

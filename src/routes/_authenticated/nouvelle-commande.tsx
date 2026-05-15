@@ -32,7 +32,7 @@ type Ligne = {
   quantite: number | null;
 };
 
-export const Route = createFileRoute("/nouvelle-commande")({
+export const Route = createFileRoute("/_authenticated/nouvelle-commande")({
   head: () => ({
     meta: [
       { title: "Nouvelle commande — Pressing by Ramou Diouf" },
