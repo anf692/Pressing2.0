@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { INFOS_PRESSING } from "@/lib/format";
 
@@ -23,8 +24,13 @@ const liens = [
 
 export function AppSidebar() {
   const cheminCourant = useRouterState({ select: (s) => s.location.pathname });
+  const { setOpenMobile, isMobile } = useSidebar();
   const estActif = (url: string) =>
     url === "/" ? cheminCourant === "/" : cheminCourant.startsWith(url);
+
+  const fermerSiMobile = () => {
+    if (isMobile) setOpenMobile(false);
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -47,7 +53,7 @@ export function AppSidebar() {
               {liens.map((lien) => (
                 <SidebarMenuItem key={lien.url}>
                   <SidebarMenuButton asChild isActive={estActif(lien.url)} tooltip={lien.titre}>
-                    <Link to={lien.url} className="flex items-center gap-2">
+                    <Link to={lien.url} onClick={fermerSiMobile} className="flex items-center gap-2">
                       <lien.icone className="h-4 w-4" />
                       <span>{lien.titre}</span>
                     </Link>

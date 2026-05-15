@@ -9,49 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedNouvelleCommandeRouteImport } from './routes/_authenticated/nouvelle-commande'
 import { Route as AuthenticatedArticlesRouteImport } from './routes/_authenticated/articles'
 import { Route as AuthenticatedCommandesIndexRouteImport } from './routes/_authenticated/commandes.index'
 import { Route as AuthenticatedCommandesIdRouteImport } from './routes/_authenticated/commandes.$id'
 
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/_authenticated/',
-  path: '/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedNouvelleCommandeRoute =
   AuthenticatedNouvelleCommandeRouteImport.update({
-    id: '/_authenticated/nouvelle-commande',
+    id: '/nouvelle-commande',
     path: '/nouvelle-commande',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedArticlesRoute = AuthenticatedArticlesRouteImport.update({
-  id: '/_authenticated/articles',
+  id: '/articles',
   path: '/articles',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedCommandesIndexRoute =
   AuthenticatedCommandesIndexRouteImport.update({
-    id: '/_authenticated/commandes/',
+    id: '/commandes/',
     path: '/commandes/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedCommandesIdRoute =
   AuthenticatedCommandesIdRouteImport.update({
-    id: '/_authenticated/commandes/$id',
+    id: '/commandes/$id',
     path: '/commandes/$id',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AuthenticatedIndexRoute
+  '/login': typeof LoginRoute
   '/articles': typeof AuthenticatedArticlesRoute
   '/nouvelle-commande': typeof AuthenticatedNouvelleCommandeRoute
-  '/': typeof AuthenticatedIndexRoute
   '/commandes/$id': typeof AuthenticatedCommandesIdRoute
   '/commandes/': typeof AuthenticatedCommandesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/login': typeof LoginRoute
   '/articles': typeof AuthenticatedArticlesRoute
   '/nouvelle-commande': typeof AuthenticatedNouvelleCommandeRoute
   '/': typeof AuthenticatedIndexRoute
@@ -60,6 +73,8 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
   '/_authenticated/articles': typeof AuthenticatedArticlesRoute
   '/_authenticated/nouvelle-commande': typeof AuthenticatedNouvelleCommandeRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -69,15 +84,24 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
+    | '/login'
+    | '/articles'
+    | '/nouvelle-commande'
+    | '/commandes/$id'
+    | '/commandes/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/login'
     | '/articles'
     | '/nouvelle-commande'
     | '/'
     | '/commandes/$id'
-    | '/commandes/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/articles' | '/nouvelle-commande' | '/' | '/commandes/$id' | '/commandes'
+    | '/commandes'
   id:
     | '__root__'
+    | '/_authenticated'
+    | '/login'
     | '/_authenticated/articles'
     | '/_authenticated/nouvelle-commande'
     | '/_authenticated/'
@@ -86,6 +110,65 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/nouvelle-commande': {
+      id: '/_authenticated/nouvelle-commande'
+      path: '/nouvelle-commande'
+      fullPath: '/nouvelle-commande'
+      preLoaderRoute: typeof AuthenticatedNouvelleCommandeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/articles': {
+      id: '/_authenticated/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof AuthenticatedArticlesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/commandes/': {
+      id: '/_authenticated/commandes/'
+      path: '/commandes'
+      fullPath: '/commandes/'
+      preLoaderRoute: typeof AuthenticatedCommandesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/commandes/$id': {
+      id: '/_authenticated/commandes/$id'
+      path: '/commandes/$id'
+      fullPath: '/commandes/$id'
+      preLoaderRoute: typeof AuthenticatedCommandesIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+  }
+}
+
+interface AuthenticatedRouteChildren {
   AuthenticatedArticlesRoute: typeof AuthenticatedArticlesRoute
   AuthenticatedNouvelleCommandeRoute: typeof AuthenticatedNouvelleCommandeRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -93,52 +176,21 @@ export interface RootRouteChildren {
   AuthenticatedCommandesIndexRoute: typeof AuthenticatedCommandesIndexRoute
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/nouvelle-commande': {
-      id: '/_authenticated/nouvelle-commande'
-      path: '/nouvelle-commande'
-      fullPath: '/nouvelle-commande'
-      preLoaderRoute: typeof AuthenticatedNouvelleCommandeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/articles': {
-      id: '/_authenticated/articles'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof AuthenticatedArticlesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/commandes/': {
-      id: '/_authenticated/commandes/'
-      path: '/commandes'
-      fullPath: '/commandes/'
-      preLoaderRoute: typeof AuthenticatedCommandesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/commandes/$id': {
-      id: '/_authenticated/commandes/$id'
-      path: '/commandes/$id'
-      fullPath: '/commandes/$id'
-      preLoaderRoute: typeof AuthenticatedCommandesIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
-}
-
-const rootRouteChildren: RootRouteChildren = {
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedArticlesRoute: AuthenticatedArticlesRoute,
   AuthenticatedNouvelleCommandeRoute: AuthenticatedNouvelleCommandeRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCommandesIdRoute: AuthenticatedCommandesIdRoute,
   AuthenticatedCommandesIndexRoute: AuthenticatedCommandesIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
