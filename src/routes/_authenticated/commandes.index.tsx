@@ -39,7 +39,7 @@ type CommandeListe = {
   clients: { nom: string; whatsapp: string } | null;
 };
 
-export const Route = createFileRoute("/commandes/")({
+export const Route = createFileRoute("/_authenticated/commandes/")({
   head: () => ({
     meta: [
       { title: "Commandes — Pressing by Ramou Diouf" },
@@ -82,16 +82,16 @@ function PageCommandes() {
   }, [data, recherche, filtreStatut, filtreDate]);
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto space-y-4 p-4 sm:space-y-6 sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Commandes</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold text-primary sm:text-3xl">Commandes</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Toutes les commandes du pressing avec filtres et recherche
           </p>
         </div>
-        <Link to="/nouvelle-commande">
-          <Button>Nouvelle commande</Button>
+        <Link to="/nouvelle-commande" className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto">Nouvelle commande</Button>
         </Link>
       </div>
 
@@ -127,7 +127,7 @@ function PageCommandes() {
       </Card>
 
       <Card>
-        <CardContent className="p-0">
+        <CardContent className="overflow-x-auto p-0">
           <Table>
             <TableHeader>
               <TableRow>

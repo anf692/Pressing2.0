@@ -32,7 +32,7 @@ type Ligne = {
   quantite: number | null;
 };
 
-export const Route = createFileRoute("/nouvelle-commande")({
+export const Route = createFileRoute("/_authenticated/nouvelle-commande")({
   head: () => ({
     meta: [
       { title: "Nouvelle commande — Pressing by Ramou Diouf" },
@@ -182,10 +182,10 @@ function PageNouvelleCommande() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 p-6">
+    <div className="container mx-auto max-w-4xl space-y-4 p-4 sm:space-y-6 sm:p-6">
       <div>
-        <h1 className="text-3xl font-bold text-primary">Nouvelle commande</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-2xl font-bold text-primary sm:text-3xl">Nouvelle commande</h1>
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Saisissez les informations du client et les articles déposés
         </p>
       </div>
@@ -226,11 +226,11 @@ function PageNouvelleCommande() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
           <CardTitle>Articles</CardTitle>
           <Button variant="outline" size="sm" onClick={ajouterLigne}>
             <Plus className="mr-1 h-4 w-4" />
-            Ajouter un article
+            Ajouter
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -316,13 +316,13 @@ function PageNouvelleCommande() {
       </Card>
 
       <Card className="border-primary">
-        <CardContent className="flex items-center justify-between p-6">
-          <span className="text-lg font-medium">Total à payer</span>
-          <span className="text-3xl font-bold text-primary">{formaterFCFA(total)}</span>
+        <CardContent className="flex flex-wrap items-center justify-between gap-2 p-4 sm:p-6">
+          <span className="text-base font-medium sm:text-lg">Total à payer</span>
+          <span className="text-2xl font-bold text-primary sm:text-3xl">{formaterFCFA(total)}</span>
         </CardContent>
       </Card>
 
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
         <Button variant="outline" onClick={() => navigate({ to: "/commandes" })}>
           Annuler
         </Button>

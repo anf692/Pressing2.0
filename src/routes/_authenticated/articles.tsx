@@ -43,7 +43,7 @@ type Article = {
   actif: boolean;
 };
 
-export const Route = createFileRoute("/articles")({
+export const Route = createFileRoute("/_authenticated/articles")({
   head: () => ({
     meta: [
       { title: "Articles & tarifs — Pressing by Ramou Diouf" },
@@ -135,17 +135,17 @@ function PageArticles() {
   };
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto space-y-4 p-4 sm:space-y-6 sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Articles &amp; tarifs</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold text-primary sm:text-3xl">Articles &amp; tarifs</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Gérez la grille tarifaire des articles du pressing
           </p>
         </div>
         <Dialog open={ouvert} onOpenChange={setOuvert}>
           <DialogTrigger asChild>
-            <Button onClick={ouvrirCreation}>
+            <Button onClick={ouvrirCreation} className="w-full sm:w-auto">
               <Plus className="mr-2 h-4 w-4" />
               Nouvel article
             </Button>
@@ -203,7 +203,7 @@ function PageArticles() {
         <CardHeader>
           <CardTitle>Liste des articles</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto p-0 sm:p-6">
           <Table>
             <TableHeader>
               <TableRow>
