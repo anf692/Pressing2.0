@@ -26,6 +26,7 @@ function PageConnexion() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
+  const [nomComplet, setNomComplet] = useState("");
   const [enCours, setEnCours] = useState(false);
 
   useEffect(() => {
@@ -49,11 +50,18 @@ function PageConnexion() {
 
   const sInscrire = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!nomComplet.trim()) {
+      toast.error("Le nom complet est obligatoire");
+      return;
+    }
     setEnCours(true);
     const { error } = await supabase.auth.signUp({
       email,
       password: motDePasse,
-      options: { emailRedirectTo: `${window.location.origin}/` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+        data: { nom_complet: nomComplet.trim(), full_name: nomComplet.trim() },
+      },
     });
     setEnCours(false);
     if (error) {
@@ -135,6 +143,18 @@ function PageConnexion() {
               </TabsContent>
               <TabsContent value="inscription">
                 <form onSubmit={sInscrire} className="space-y-3">
+                  <div>
+                    <Label htmlFor="nom-i">Nom complet</Label>
+                    <Input
+                      id="nom-i"
+                      type="text"
+                      autoComplete="name"
+                      value={nomComplet}
+                      onChange={(e) => setNomComplet(e.target.value)}
+                      placeholder="Ex : Ramou Diouf"
+                      required
+                    />
+                  </div>
                   <div>
                     <Label htmlFor="email-i">Email</Label>
                     <Input
