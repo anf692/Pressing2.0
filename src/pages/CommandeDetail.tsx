@@ -63,20 +63,32 @@ export default function PageDetail() {
 
   if (isLoading || !data) return <div className="p-6 text-muted-foreground">Chargement…</div>;
 
-  const messageWA =
-    `Bonjour ${data.clients?.nom ?? ""},\n\n` +
-    `Voici votre ticket de pressing :\n` +
-    `N° ${data.numero_ticket}\n` +
-    `Date de dépôt : ${formaterDate(data.date_depot)}\n` +
-    (data.date_recuperation_estimee ? `Récupération estimée : ${formaterDate(data.date_recuperation_estimee)}\n` : "") +
-    `\nArticles :\n` +
-    data.lignes_commande.map((l) => {
-      const q = l.articles?.type_prix === "kilo" ? `${l.poids_kg} kg` : `x${l.quantite}`;
-      return `- ${l.articles?.nom} (${q}) : ${formaterFCFA(l.sous_total)}`;
-    }).join("\n") +
-    `\n\nTotal : ${formaterFCFA(data.total_fcfa)}\n\n` +
-    `${INFOS_PRESSING.nom} — ${INFOS_PRESSING.localisation}\n` +
-    `${INFOS_PRESSING.contacts.join(" / ")}`;
+const messageWA =
+    `Bonjour ${data.clients?.nom ?? ""} 👋
+
+    🧾 *Votre ticket de pressing est prêt*
+
+    ━━━━━━━━━━━━━━━
+    📌 *N° Ticket* : ${data.numero_ticket}
+    📅 *Dépôt* : ${formaterDate(data.date_depot)}
+    ${data.date_recuperation_estimee ? `📆 *Récupération* : ${formaterDate(data.date_recuperation_estimee)}\n` : ""}
+
+    🧺 *Détails :*
+    ${data.lignes_commande.map((l) => {
+      const q = l.articles?.type_prix === "kilo"
+        ? `${l.poids_kg} kg`
+        : `x${l.quantite}`;
+      return `• ${l.articles?.nom} (${q}) → ${formaterFCFA(l.sous_total)}`;
+    }).join("\n")}
+
+    ━━━━━━━━━━━━━━━
+    💰 *Total : ${formaterFCFA(data.total_fcfa)}*
+
+    📍 ${INFOS_PRESSING.nom}
+    📌 ${INFOS_PRESSING.localisation}
+    📱 ${INFOS_PRESSING.contacts.join(" / ")}
+
+    🙏 Merci pour votre confiance !`;
 
   return (
     <div className="container mx-auto max-w-4xl space-y-4 p-4 sm:space-y-6 sm:p-6">
@@ -104,8 +116,6 @@ export default function PageDetail() {
             <SelectTrigger className="w-full sm:w-60"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="en_attente">En attente</SelectItem>
-              <SelectItem value="en_cours">En cours</SelectItem>
-              <SelectItem value="pret">Prêt</SelectItem>
               <SelectItem value="recupere">Récupéré</SelectItem>
             </SelectContent>
           </Select>
