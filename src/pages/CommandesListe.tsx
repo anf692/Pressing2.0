@@ -1,34 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
 import { Eye, Search } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  formaterDateHeure,
-  formaterFCFA,
-  libelleStatut,
-  couleurStatut,
-} from "@/lib/format";
+import { formaterDateHeure, formaterFCFA, libelleStatut, couleurStatut } from "@/lib/format";
 
 type CommandeListe = {
   id: string;
@@ -39,17 +21,9 @@ type CommandeListe = {
   clients: { nom: string; whatsapp: string } | null;
 };
 
-export const Route = createFileRoute("/_authenticated/commandes/")({
-  head: () => ({
-    meta: [
-      { title: "Commandes — Pressing by Ramou Diouf" },
-      { name: "description", content: "Liste des commandes du pressing." },
-    ],
-  }),
-  component: PageCommandes,
-});
+export default function PageCommandes() {
+  useEffect(() => { document.title = "Commandes — Pressing by Ramou Diouf"; }, []);
 
-function PageCommandes() {
   const { data } = useQuery({
     queryKey: ["commandes-liste"],
     queryFn: async () => {
@@ -69,14 +43,10 @@ function PageCommandes() {
   const commandesFiltrees = useMemo(() => {
     let cs = data ?? [];
     if (filtreStatut !== "tous") cs = cs.filter((c) => c.statut === filtreStatut);
-    if (filtreDate) cs = cs.filter((c) => c.date_depot.slice(0, 10) === filtreDate);
+    if (filtreDate) cs = cs.filter((c) => c.date_depot.slice(0,10) === filtreDate);
     if (recherche.trim()) {
       const q = recherche.toLowerCase().trim();
-      cs = cs.filter(
-        (c) =>
-          c.numero_ticket.toLowerCase().includes(q) ||
-          (c.clients?.nom ?? "").toLowerCase().includes(q),
-      );
+      cs = cs.filter((c) => c.numero_ticket.toLowerCase().includes(q) || (c.clients?.nom ?? "").toLowerCase().includes(q));
     }
     return cs;
   }, [data, recherche, filtreStatut, filtreDate]);
@@ -86,9 +56,7 @@ function PageCommandes() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-primary sm:text-3xl">Commandes</h1>
-          <p className="text-xs text-muted-foreground sm:text-sm">
-            Toutes les commandes du pressing avec filtres et recherche
-          </p>
+          <p className="text-xs text-muted-foreground sm:text-sm">Toutes les commandes du pressing avec filtres et recherche</p>
         </div>
         <Link to="/nouvelle-commande" className="w-full sm:w-auto">
           <Button className="w-full sm:w-auto">Nouvelle commande</Button>
@@ -99,17 +67,11 @@ function PageCommandes() {
         <CardContent className="grid grid-cols-1 gap-4 p-4 md:grid-cols-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Rechercher par ticket ou nom client…"
-              className="pl-9"
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
-            />
+            <Input placeholder="Rechercher par ticket ou nom client…" className="pl-9"
+              value={recherche} onChange={(e) => setRecherche(e.target.value)} />
           </div>
           <Select value={filtreStatut} onValueChange={setFiltreStatut}>
-            <SelectTrigger>
-              <SelectValue placeholder="Statut" />
-            </SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Statut" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="tous">Tous les statuts</SelectItem>
               <SelectItem value="en_attente">En attente</SelectItem>
@@ -118,11 +80,7 @@ function PageCommandes() {
               <SelectItem value="recupere">Récupéré</SelectItem>
             </SelectContent>
           </Select>
-          <Input
-            type="date"
-            value={filtreDate}
-            onChange={(e) => setFiltreDate(e.target.value)}
-          />
+          <Input type="date" value={filtreDate} onChange={(e) => setFiltreDate(e.target.value)} />
         </CardContent>
       </Card>
 
@@ -144,32 +102,20 @@ function PageCommandes() {
                 <TableRow key={c.id}>
                   <TableCell className="font-mono font-semibold">{c.numero_ticket}</TableCell>
                   <TableCell>{c.clients?.nom ?? "—"}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {formaterDateHeure(c.date_depot)}
-                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{formaterDateHeure(c.date_depot)}</TableCell>
                   <TableCell>
-                    <Badge className={couleurStatut(c.statut)} variant="secondary">
-                      {libelleStatut(c.statut)}
-                    </Badge>
+                    <Badge className={couleurStatut(c.statut)} variant="secondary">{libelleStatut(c.statut)}</Badge>
                   </TableCell>
-                  <TableCell className="text-right font-semibold">
-                    {formaterFCFA(c.total_fcfa)}
-                  </TableCell>
+                  <TableCell className="text-right font-semibold">{formaterFCFA(c.total_fcfa)}</TableCell>
                   <TableCell className="text-right">
                     <Link to="/commandes/$id" params={{ id: c.id }}>
-                      <Button variant="ghost" size="icon">
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <Button variant="ghost" size="icon"><Eye className="h-4 w-4" /></Button>
                     </Link>
                   </TableCell>
                 </TableRow>
               ))}
               {commandesFiltrees.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
-                    Aucune commande trouvée
-                  </TableCell>
-                </TableRow>
+                <TableRow><TableCell colSpan={6} className="py-8 text-center text-muted-foreground">Aucune commande trouvée</TableCell></TableRow>
               )}
             </TableBody>
           </Table>

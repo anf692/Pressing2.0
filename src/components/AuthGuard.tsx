@@ -1,20 +1,19 @@
-import { useEffect, useState } from "react";
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
-
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated")({
-  // beforeLoad ne s'exécute pas avec une session hydratée côté client uniquement.
-  // On effectue la vérification finale dans le composant pour éviter les flashs côté SSR.
-  component: LayoutAuthentifie,
-});
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { Button } from "@/components/ui/button";
+import { ChargementPage } from "@/components/ChargementPage";
+import { supabase } from "@/integrations/supabase/client";
 
-function LayoutAuthentifie() {
+/**
+ * Garde d'authentification : protège les routes privées.
+ * Si pas de session → redirection vers /login.
+ */
+export function AuthGuard({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [verifie, setVerifie] = useState(false);
   const [emailUtilisateur, setEmailUtilisateur] = useState<string | null>(null);
@@ -51,13 +50,7 @@ function LayoutAuthentifie() {
     navigate({ to: "/login", replace: true });
   };
 
-  if (!verifie) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-sm text-muted-foreground">Chargement…</p>
-      </div>
-    );
-  }
+  if (!verifie) return <ChargementPage />;
 
   return (
     <SidebarProvider>
@@ -81,9 +74,7 @@ function LayoutAuthentifie() {
               </Button>
             </div>
           </header>
-          <main className="flex-1">
-            <Outlet />
-          </main>
+          <main className="flex-1">{children}</main>
         </div>
       </div>
     </SidebarProvider>

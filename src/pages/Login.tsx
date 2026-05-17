@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Shirt } from "lucide-react";
 import { toast } from "sonner";
 
@@ -9,20 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { INFOS_PRESSING } from "@/lib/format";
 
-export const Route = createFileRoute("/login")({
-  head: () => ({
-    meta: [
-      { title: "Connexion — Pressing by Ramou Diouf" },
-      { name: "description", content: "Connectez-vous à l'application de gestion du pressing." },
-    ],
-  }),
-  component: PageConnexion,
-});
-
-function PageConnexion() {
+export default function PageConnexion() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
@@ -30,6 +19,7 @@ function PageConnexion() {
   const [enCours, setEnCours] = useState(false);
 
   useEffect(() => {
+    document.title = "Connexion — Pressing by Ramou Diouf";
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/", replace: true });
     });
@@ -73,16 +63,11 @@ function PageConnexion() {
   };
 
   const seConnecterGoogle = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/` },
     });
-    if (result.error) {
-      toast.error("Erreur Google : " + (result.error as Error).message);
-      return;
-    }
-    if (!result.redirected) {
-      navigate({ to: "/", replace: true });
-    }
+    if (error) toast.error("Erreur Google : " + error.message);
   };
 
   return (
@@ -116,25 +101,13 @@ function PageConnexion() {
                 <form onSubmit={seConnecter} className="space-y-3">
                   <div>
                     <Label htmlFor="email-c">Email</Label>
-                    <Input
-                      id="email-c"
-                      type="email"
-                      autoComplete="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
+                    <Input id="email-c" type="email" autoComplete="email" value={email}
+                      onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                   <div>
                     <Label htmlFor="mdp-c">Mot de passe</Label>
-                    <Input
-                      id="mdp-c"
-                      type="password"
-                      autoComplete="current-password"
-                      value={motDePasse}
-                      onChange={(e) => setMotDePasse(e.target.value)}
-                      required
-                    />
+                    <Input id="mdp-c" type="password" autoComplete="current-password" value={motDePasse}
+                      onChange={(e) => setMotDePasse(e.target.value)} required />
                   </div>
                   <Button type="submit" className="w-full" disabled={enCours}>
                     {enCours ? "Connexion…" : "Se connecter"}
@@ -145,38 +118,18 @@ function PageConnexion() {
                 <form onSubmit={sInscrire} className="space-y-3">
                   <div>
                     <Label htmlFor="nom-i">Nom complet</Label>
-                    <Input
-                      id="nom-i"
-                      type="text"
-                      autoComplete="name"
-                      value={nomComplet}
-                      onChange={(e) => setNomComplet(e.target.value)}
-                      placeholder="Ex : Ramou Diouf"
-                      required
-                    />
+                    <Input id="nom-i" type="text" autoComplete="name" value={nomComplet}
+                      onChange={(e) => setNomComplet(e.target.value)} placeholder="Ex : Ramou Diouf" required />
                   </div>
                   <div>
                     <Label htmlFor="email-i">Email</Label>
-                    <Input
-                      id="email-i"
-                      type="email"
-                      autoComplete="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
+                    <Input id="email-i" type="email" autoComplete="email" value={email}
+                      onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                   <div>
                     <Label htmlFor="mdp-i">Mot de passe</Label>
-                    <Input
-                      id="mdp-i"
-                      type="password"
-                      autoComplete="new-password"
-                      minLength={6}
-                      value={motDePasse}
-                      onChange={(e) => setMotDePasse(e.target.value)}
-                      required
-                    />
+                    <Input id="mdp-i" type="password" autoComplete="new-password" minLength={6} value={motDePasse}
+                      onChange={(e) => setMotDePasse(e.target.value)} required />
                   </div>
                   <Button type="submit" className="w-full" disabled={enCours}>
                     {enCours ? "Création…" : "Créer un compte"}
