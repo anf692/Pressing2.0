@@ -61,7 +61,7 @@ export default function PageNouvelleCommande() {
     [lignes, articles]);
 
   const enregistrer = async () => {
-    if (!nomClient.trim() || !whatsapp.trim()) { toast.error("Nom et numéro WhatsApp sont obligatoires"); return; }
+    if (!nomClient.trim()) { toast.error("Le nom du client est obligatoire"); return; }
     if (lignes.length === 0) { toast.error("Ajoutez au moins un article"); return; }
     for (const l of lignes) {
       if (!l.article_id) { toast.error("Sélectionnez un article pour chaque ligne"); return; }
@@ -72,7 +72,10 @@ export default function PageNouvelleCommande() {
 
     setEnCours(true);
     try {
-      const { data: client, error: errClient } = await supabase.from("clients").insert({ nom: nomClient.trim(), whatsapp: whatsapp.trim() }).select().single();
+      const { data: client, error: errClient } = await supabase.from("clients").insert({
+        nom: nomClient.trim(),
+        whatsapp: whatsapp.trim() || "",
+      }).select().single();
       if (errClient || !client) throw errClient ?? new Error("Création client échouée");
 
       const { data: commande, error: errCmd } = await supabase.from("commandes").insert({

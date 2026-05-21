@@ -113,8 +113,8 @@ function PageNouvelleCommande() {
   );
 
   const enregistrer = async () => {
-    if (!nomClient.trim() || !whatsapp.trim()) {
-      toast.error("Nom et numéro WhatsApp sont obligatoires");
+    if (!nomClient.trim()) {
+      toast.error("Le nom du client est obligatoire");
       return;
     }
     if (lignes.length === 0) {
@@ -142,7 +142,10 @@ function PageNouvelleCommande() {
       // 1. Créer le client
       const { data: client, error: errClient } = await supabase
         .from("clients")
-        .insert({ nom: nomClient.trim(), whatsapp: whatsapp.trim() })
+        .insert({
+          nom: nomClient.trim(),
+          whatsapp: whatsapp.trim() || "",
+        })
         .select()
         .single();
       if (errClient || !client) throw errClient ?? new Error("Création client échouée");
